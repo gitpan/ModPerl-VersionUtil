@@ -1,0 +1,6 @@
+Revision history for Perl extension ModPerl::VersionUtil.
+
+0.01  Mon Jan 16 19:19:16 2006
+	- original version; created by h2xs 1.23 with options
+		-X -A -n ModPerl::VersionUtil
+
