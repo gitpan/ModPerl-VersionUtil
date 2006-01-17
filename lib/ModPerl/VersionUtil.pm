@@ -1,10 +1,10 @@
-#$Id: VersionUtil.pm,v 1.1 2006/01/16 11:38:35 naoya Exp $
+#$Id: VersionUtil.pm,v 1.3 2006/01/17 01:36:51 naoya Exp $
 package ModPerl::VersionUtil;
 use strict;
 use warnings;
 use base qw(Class::Data::Inheritable);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 BEGIN {
     __PACKAGE__->mk_classdata($_)
@@ -83,7 +83,7 @@ Returns true if your mod_perl version is 1.0.
 Returns true if your mod_perl version is 1.9 which is incompatible
 with 2.0.
 
-=item is_mp20
+=item is_mp2
 
 Returns true if your mod_perl version is 2.0 or higher.
 
