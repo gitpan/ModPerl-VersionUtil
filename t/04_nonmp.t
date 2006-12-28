@@ -1,5 +1,6 @@
 use strict;
-use Test::More qw(no_plan);
+use warnings;
+use Test::More tests => 6;
 use ModPerl::VersionUtil;
 
 ok(!ModPerl::VersionUtil->is_mp);

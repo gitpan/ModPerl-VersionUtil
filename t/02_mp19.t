@@ -1,8 +1,10 @@
 use strict;
-use Test::More qw(no_plan);
+use warnings;
+use Test::More tests => 6;
 
 BEGIN {
     $ENV{MOD_PERL} = 'mod_perl/1.999.20';
+    $INC{'Apache.pm'} = 1;
     require ModPerl::VersionUtil;
 }
 

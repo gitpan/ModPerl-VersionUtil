@@ -2,26 +2,30 @@
 package ModPerl::VersionUtil;
 use strict;
 use warnings;
-use base qw(Class::Data::Inheritable);
+use base qw/Class::Data::Inheritable/;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 BEGIN {
     __PACKAGE__->mk_classdata($_)
-        for qw(mp_version mp_version_string is_mp is_mp1 is_mp19 is_mp2);
+        for qw/mp_version mp_version_string is_mp is_mp1 is_mp19 is_mp2/;
 
-    if (exists $ENV{MOD_PERL}) {
-        __PACKAGE__->is_mp(1);
-        __PACKAGE__->is_mp2(1) if $ENV{MOD_PERL_API_VERSION} && $ENV{MOD_PERL_API_VERSION} == 2;
+    if (my $version = $ENV{MOD_PERL}) {
+        # Note: This environment variable could be set in an external script called from mod_perl,
+        # so don't presume we are in mod_perl just yet.
 
-        my ($version) = $ENV{MOD_PERL} =~ /^\S+\/(\d+(?:[\.\_]\d+)+)/;
+        ($version) = $version =~ /^\S+\/(\d+(?:[\.\_]\d+)+)/;
         __PACKAGE__->mp_version_string($version);
 
         $version =~ s/_//g;
         $version =~ s/(\.[^.]+)\./$1/g;
         __PACKAGE__->mp_version($version);
 
-        unless (__PACKAGE__->is_mp2) {
+        if ($ENV{MOD_PERL_API_VERSION} && $ENV{MOD_PERL_API_VERSION} == 2 && exists $INC{'Apache2/RequestRec.pm'}) {
+            __PACKAGE__->is_mp(1);
+            __PACKAGE__->is_mp2(1)
+        } elsif (exists $INC{'Apache.pm'}) {
+            __PACKAGE__->is_mp(1);
             if ( $version >= 1.9901 ) {
                 __PACKAGE__->is_mp19(1);
             } elsif ( $version >= 1.24 ) {
@@ -31,14 +35,13 @@ BEGIN {
     }
 }
 
-
 1;
 
 __END__
 
 =head1 NAME
 
-ModPerl::VersionUtil - Make it easier to investigate your mod_perl
+ModPerl::VersionUtil - Makes it easier to investigate your mod_perl
 version.
 
 =head1 SYNOPSIS
@@ -94,6 +97,11 @@ Returns your mod_perl version as number. (e.g. '1.99920')
 =item mp_version_string
 
 Returns your mod_perl version as string. (e.g. '1.999.20')
+
+=head1 ACKNOWLEDGEMENTS
+
+Craig Manley E<lt>CMANLEY@cpan.orgE<gt> gave me a code to handle an
+external scripts correctly.
 
 =head1 AUTHOR
 
